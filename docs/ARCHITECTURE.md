@@ -6,11 +6,11 @@
 |-------------------------|---------------------------------------------------------------------|
 | `source/StrideApp.mc`   | `AppBase`. Returns the view. Repaints on settings change.           |
 | `source/StrideView.mc`  | The `WatchFace`. Layout and composition; owns no persistence.       |
-| `source/WeekChart.mc`   | The seven-day bar chart: axis, ticks, bars, numbered date labels.   |
+| `source/WeekChart.mc`   | The seven-day segmented chart: 10% blocks, goal-aware color, dashed goal line, numbered days. |
 | `source/Metrics.mc`     | Guarded reads of the bottom-row metrics (recovery, BB, weather).    |
 | `source/StepHistory.mc` | Self-logged rolling last-seven-days step model.                     |
-| `source/Theme.mc`       | Color constants and the accent lookup.                              |
-| `resources/fonts/`      | `LcdTime` (DSEG7) and `DayNum` (Arial Narrow) bitmap fonts.         |
+| `source/Theme.mc`       | Grid-aligned color constants and the accent lookup.                 |
+| `resources/fonts/`      | Four bitmap fonts: `LcdTime`/`LcdSmall` (DSEG7), `DayNum`/`Word` (Arial Narrow). |
 
 The view draws and composes; the modules own state and math. Do not move persistence or sensor reads into the view.
 

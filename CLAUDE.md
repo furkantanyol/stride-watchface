@@ -4,7 +4,7 @@ This file is the brief for Claude Code. Read it fully before touching code. The 
 
 ## Mission
 
-A minimalist, elegant digital watch face whose one job is to push the wearer to 10,000 steps a day. A faithful homage to the Casio G-Shock GBD-200 LCD, adapted to a round 240x240 display. A seven-day step chart is the hero, today's bar in red against the goal line; the time sits below in a real DSEG7 LCD font; steps, distance, and recovery/Body-Battery/weather frame it. Pure monochrome with one red accent.
+A minimalist, elegant digital watch face whose one job is to push the wearer to 10,000 steps a day. A homage to the Casio G-Shock GBD-200 LCD, adapted to a round 240x240 display. A seven-day segmented step chart is the hero, today's bar in amber against the goal line; the time sits below in a real DSEG7 LCD font; steps, distance, and recovery/Body-Battery/weather frame it as numbers + units. Pure monochrome with one amber accent.
 
 This is a personal face, not a store product. Do not add configuration, telemetry, or features that are not in `docs/SPEC.md`. YAGNI is law here.
 
@@ -26,7 +26,7 @@ This is a personal face, not a store product. Do not add configuration, telemetr
 
 Full system in `docs/DESIGN.md`. The rules you must not break:
 
-- Midnight-black background, pure monochrome. One accent color (red by default), used only for: today's bar and today's date number. Everything else is white or neutral gray. Grays must be neutral (R=G=B) — a blue tint quantizes to purple on the 64-color MIP panel.
+- Midnight-black background, pure monochrome. One accent color (amber 0xFFAA00 by default), used only for: today's bar and today's date number. Everything else is white or neutral gray. All colors sit on the 64-color MIP grid (each channel 00/55/AA/FF); grays must be neutral (R=G=B) — a blue tint quantizes to purple.
 - The seven-day chart is the hero; the time is large but second. Steps and distance whisper in the corners. Generous negative space, nothing decorative.
 - The accent is a single constant in `source/Theme.mc`, also overridable via app settings. Changing it is a one-line edit.
 - If a feature does not help the wearer reach 10k or read the time, it does not belong on the face.
@@ -37,7 +37,7 @@ Detail in `docs/ARCHITECTURE.md`. Source layout:
 
 - `source/StrideApp.mc` — `AppBase`, returns the view.
 - `source/StrideView.mc` — the `WatchFace`. Owns layout and composition.
-- `source/WeekChart.mc` — the seven-day bar chart (axis, ticks, bars, numbered date labels).
+- `source/WeekChart.mc` — the seven-day segmented bar chart (10% blocks, goal-aware color, dashed goal line, numbered days).
 - `source/Metrics.mc` — guarded reads for the bottom row (recovery, Body Battery, weather).
 - `source/Theme.mc` — colors and the accent constant.
 - `source/StepHistory.mc` — rolling last-seven-days step model. Self-logs daily totals into `Application.Storage` under `"history"` keyed by local day number, reliable regardless of `ActivityMonitor.getHistory()` depth.
