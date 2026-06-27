@@ -21,8 +21,8 @@ class StrideView extends Ui.WatchFace {
     hidden const TIME_CY  = 0.655;   // vertical centre of the time band
     hidden const DATE_DY  = 10;      // px each date line sits from the time centre
     hidden const BOTTOM_Y = 0.780;   // recovery / body battery / weather labels
-    hidden const STAT_LABEL_DY = 18; // px from a top value down to its label
-    hidden const STAT_VALUE_DY = 12; // px from a bottom label down to its value
+    hidden const STAT_LABEL_DY = 14; // px from a top value down to its label
+    hidden const STAT_VALUE_DY = 10; // px from a bottom label down to its value
 
     hidden const DATE_PAD   = 8;     // px between the time and the date block
     hidden const CM_PER_KM  = 100000.0;
@@ -154,7 +154,7 @@ class StrideView extends Ui.WatchFace {
         dc.drawText(cx, y, Gfx.FONT_XTINY, label, Gfx.TEXT_JUSTIFY_CENTER);
         var text = (value == null) ? "--" : value.format("%d") + unit;
         dc.setColor(Theme.SEG_LIT, Gfx.COLOR_TRANSPARENT);
-        dc.drawText(cx, y + STAT_VALUE_DY, Gfx.FONT_TINY, text, Gfx.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, y + STAT_VALUE_DY, Gfx.FONT_XTINY, text, Gfx.TEXT_JUSTIFY_CENTER);
     }
 
     // ---------- helpers ----------

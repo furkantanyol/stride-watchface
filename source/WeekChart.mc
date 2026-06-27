@@ -15,7 +15,6 @@ module WeekChart {
     const BLOCK_GAP = 1;
     const SCALE_PCT = 120;   // plot tops out at 120% of goal (12 blocks)
     const GOAL_PCT  = 100;
-    const TICKS = [0, 25, 50, 75, 100];
 
     var dayFont = null;
 
@@ -32,16 +31,12 @@ module WeekChart {
         if (gap < 2) { gap = 2; }
 
         var totalW = (n * barW) + ((n - 1) * gap);
-        var axisRoom = (width * 0.06).toNumber();
-        var startX = cx - (totalW / 2) + (axisRoom / 2);
-        var axisX = startX - 7;
-        var topY = baseY - maxH;
+        var startX = cx - (totalW / 2);
         var unit = BLOCK_H + BLOCK_GAP;
         var maxBlocks = maxH / unit;
 
-        drawAxis(dc, axisX, topY, baseY, maxH);
-
         var goalY = baseY - ((GOAL_PCT * maxH) / SCALE_PCT);
+        dc.setPenWidth(1);
         dc.setColor(Theme.SEG_GHOST, Gfx.COLOR_TRANSPARENT);
         dashedLine(dc, startX, startX + totalW, goalY);
 
@@ -64,17 +59,6 @@ module WeekChart {
 
             dc.setColor(isToday ? accent : Theme.MUTED, Gfx.COLOR_TRANSPARENT);
             dc.drawText(x + (barW / 2), baseY + 3, dayFont, labels[i], Gfx.TEXT_JUSTIFY_CENTER);
-        }
-    }
-
-    function drawAxis(dc as Gfx.Dc, axisX as Lang.Number, topY as Lang.Number,
-                      baseY as Lang.Number, maxH as Lang.Number) as Void {
-        dc.setPenWidth(1);
-        dc.setColor(Theme.MUTED, Gfx.COLOR_TRANSPARENT);
-        dc.drawLine(axisX, topY, axisX, baseY);
-        for (var k = 0; k < TICKS.size(); k += 1) {
-            var ty = baseY - ((TICKS[k] * maxH) / SCALE_PCT);
-            dc.drawLine(axisX - 3, ty, axisX, ty);
         }
     }
 
