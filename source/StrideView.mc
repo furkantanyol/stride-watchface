@@ -128,9 +128,8 @@ class StrideView extends Ui.WatchFace {
         var x = _cx - ((segW + DATE_PAD + dateW) / 2);
         var cy = (_height * TIME_CY).toNumber();
 
-        // The unlit "88:88" skeleton, then the lit time on top — the LCD look.
-        dc.setColor(Theme.SEG_GHOST, Gfx.COLOR_TRANSPARENT);
-        dc.drawText(x, cy, _lcd, ghostOf(timeText), Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
+        // No ghost skeleton: at the panel's 4 grayscale levels the only "faint"
+        // option (#555) competes with the lit digits and muddies the time.
         dc.setColor(Theme.SEG_LIT, Gfx.COLOR_TRANSPARENT);
         dc.drawText(x, cy, _lcd, timeText, Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
 
@@ -144,9 +143,9 @@ class StrideView extends Ui.WatchFace {
 
     hidden function drawBottomRow(dc) {
         var y = (_height * BOTTOM_Y).toNumber();
-        drawBottomStat(dc, _width * 0.22, y, "RECOV", Metrics.recoveryHours(), "H");
+        drawBottomStat(dc, _width * 0.265, y, "RECOV", Metrics.recoveryHours(), "H");
         drawBottomStat(dc, _width * 0.50, y, "BODY", Metrics.bodyBattery(), "%");
-        drawBottomStat(dc, _width * 0.78, y, "TEMP", Metrics.temperature(), "°");
+        drawBottomStat(dc, _width * 0.735, y, "TEMP", Metrics.temperature(), "°");
     }
 
     // A bottom stat: small muted label over a lit value, or "--" when absent.
@@ -169,16 +168,6 @@ class StrideView extends Ui.WatchFace {
             labels[i] = Gregorian.info(moment, Time.FORMAT_SHORT).day.format("%d");
         }
         return labels;
-    }
-
-    // The all-segments "88:88" skeleton for a given time string.
-    hidden function ghostOf(text) {
-        var out = "";
-        for (var i = 0; i < text.length(); i += 1) {
-            var c = text.substring(i, i + 1);
-            out += c.equals(":") ? ":" : "8";
-        }
-        return out;
     }
 
     hidden function maxWidth(dc, a, b) {
