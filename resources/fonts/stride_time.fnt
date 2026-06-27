@@ -1,0 +1,15 @@
+info face="stride" size=42 bold=1 italic=0 charset="" unicode=0 stretchH=100 smooth=1 aa=1 padding=0,0,0,0 spacing=1,1
+common lineHeight=56 base=43 scaleW=299 scaleH=35 pages=1 packed=0
+page id=0 file="stride_time.png"
+chars count=11
+char id=48 x=2 y=2 width=25 height=31 xoffset=0 yoffset=12 xadvance=25 page=0 chnl=15
+char id=49 x=29 y=2 width=25 height=31 xoffset=0 yoffset=12 xadvance=25 page=0 chnl=15
+char id=50 x=56 y=2 width=25 height=31 xoffset=0 yoffset=12 xadvance=25 page=0 chnl=15
+char id=51 x=83 y=2 width=25 height=31 xoffset=0 yoffset=12 xadvance=25 page=0 chnl=15
+char id=52 x=110 y=2 width=25 height=31 xoffset=0 yoffset=12 xadvance=25 page=0 chnl=15
+char id=53 x=137 y=2 width=25 height=31 xoffset=0 yoffset=12 xadvance=25 page=0 chnl=15
+char id=54 x=164 y=2 width=25 height=31 xoffset=0 yoffset=12 xadvance=25 page=0 chnl=15
+char id=55 x=191 y=2 width=25 height=31 xoffset=0 yoffset=12 xadvance=25 page=0 chnl=15
+char id=56 x=218 y=2 width=25 height=31 xoffset=0 yoffset=12 xadvance=25 page=0 chnl=15
+char id=57 x=245 y=2 width=25 height=31 xoffset=0 yoffset=12 xadvance=25 page=0 chnl=15
+char id=58 x=272 y=2 width=25 height=24 xoffset=0 yoffset=19 xadvance=25 page=0 chnl=15

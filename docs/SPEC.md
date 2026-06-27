@@ -26,10 +26,15 @@ If active nudging is ever wanted (a buzz at 6pm when under target), that is the 
 
 ## Settings
 
-Two, exposed in the Connect IQ phone app:
+Exposed in the Connect IQ phone app:
 
 - **Daily step goal.** Default 10,000. The chart's 100% line scales to this number.
-- **Accent color.** A short curated list: Red (default), Amber, Ice, White. Applied only to today's bar and today's date number.
+- **Accent color.** Amber (default), Hot, Ice, White. Applied only to today's bar and today's date number.
+- **Hour / minute distinction.** Colon (`8:32`) or colored minutes (`832`, minutes a different shade, no colon).
+- **Minutes color.** When using colored minutes: gray or the accent color.
+- **Leading zero on hour.** 12h mode: `08:32` vs `8:32`.
+- **Bar style.** Segmented (10% blocks) or solid.
+- **Show bottom metrics.** Toggle the recovery / body battery / temp row for a cleaner face.
 
 ## Explicitly out of scope (YAGNI)
 

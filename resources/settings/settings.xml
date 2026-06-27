@@ -12,4 +12,33 @@
             <listEntry value="16777215">White</listEntry>
         </settingConfig>
     </setting>
+
+    <setting propertyKey="@Properties.TimeStyle" title="@Strings.SettingTimeStyle">
+        <settingConfig type="list">
+            <listEntry value="0">Colon</listEntry>
+            <listEntry value="1">Colored minutes</listEntry>
+        </settingConfig>
+    </setting>
+
+    <setting propertyKey="@Properties.MinutesColor" title="@Strings.SettingMinutesColor">
+        <settingConfig type="list">
+            <listEntry value="0">Gray</listEntry>
+            <listEntry value="1">Accent</listEntry>
+        </settingConfig>
+    </setting>
+
+    <setting propertyKey="@Properties.LeadingZero" title="@Strings.SettingLeadingZero">
+        <settingConfig type="boolean"/>
+    </setting>
+
+    <setting propertyKey="@Properties.BarStyle" title="@Strings.SettingBarStyle">
+        <settingConfig type="list">
+            <listEntry value="0">Segmented</listEntry>
+            <listEntry value="1">Solid</listEntry>
+        </settingConfig>
+    </setting>
+
+    <setting propertyKey="@Properties.ShowMetrics" title="@Strings.SettingShowMetrics">
+        <settingConfig type="boolean"/>
+    </setting>
 </settings>

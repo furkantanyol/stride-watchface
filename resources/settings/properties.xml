@@ -2,4 +2,9 @@
 <properties>
     <property id="StepGoal" type="number">10000</property>
     <property id="AccentColor" type="number">16755200</property>
+    <property id="TimeStyle" type="number">0</property>
+    <property id="MinutesColor" type="number">0</property>
+    <property id="LeadingZero" type="boolean">false</property>
+    <property id="BarStyle" type="number">0</property>
+    <property id="ShowMetrics" type="boolean">true</property>
 </properties>

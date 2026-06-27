@@ -19,8 +19,9 @@ module WeekChart {
     var dayFont = null;
 
     function draw(dc as Gfx.Dc, accent as Lang.Number, days as Lang.Array<Lang.Number>,
-                  labels as Lang.Array<Lang.String>, goal as Lang.Number, cx as Lang.Number,
-                  width as Lang.Number, baseY as Lang.Number, maxH as Lang.Number) as Void {
+                  labels as Lang.Array<Lang.String>, goal as Lang.Number,
+                  width as Lang.Number, baseY as Lang.Number, maxH as Lang.Number,
+                  solid as Lang.Boolean) as Void {
         if (dayFont == null) { dayFont = Ui.loadResource(Rez.Fonts.DayNum); }
 
         var n = days.size();
@@ -31,7 +32,7 @@ module WeekChart {
         if (gap < 2) { gap = 2; }
 
         var totalW = (n * barW) + ((n - 1) * gap);
-        var startX = cx - (totalW / 2);
+        var startX = (width / 2) - (totalW / 2);
         var unit = BLOCK_H + BLOCK_GAP;
         var maxBlocks = maxH / unit;
 
@@ -53,8 +54,13 @@ module WeekChart {
 
             var color = isToday ? accent : ((value >= goal && value > 0) ? Theme.SEG_LIT : Theme.MUTED);
             dc.setColor(color, Gfx.COLOR_TRANSPARENT);
-            for (var b = 0; b < blocks; b += 1) {
-                dc.fillRectangle(x, baseY - ((b + 1) * unit) + BLOCK_GAP, barW, BLOCK_H);
+            if (solid) {
+                var h = (blocks * unit) - BLOCK_GAP;
+                if (h > 0) { dc.fillRectangle(x, baseY - h, barW, h); }
+            } else {
+                for (var b = 0; b < blocks; b += 1) {
+                    dc.fillRectangle(x, baseY - ((b + 1) * unit) + BLOCK_GAP, barW, BLOCK_H);
+                }
             }
 
             dc.setColor(isToday ? accent : Theme.MUTED, Gfx.COLOR_TRANSPARENT);

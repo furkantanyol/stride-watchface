@@ -3,4 +3,9 @@
     <string id="AppName">Stride</string>
     <string id="SettingStepGoal">Daily step goal</string>
     <string id="SettingAccent">Accent color</string>
+    <string id="SettingTimeStyle">Hour / minute distinction</string>
+    <string id="SettingMinutesColor">Minutes color (when colored)</string>
+    <string id="SettingLeadingZero">Leading zero on hour (12h)</string>
+    <string id="SettingBarStyle">Bar style</string>
+    <string id="SettingShowMetrics">Show bottom metrics</string>
 </strings>

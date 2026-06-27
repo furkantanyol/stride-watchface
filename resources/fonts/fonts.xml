@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <fonts>
-    <font id="LcdTime" filename="stride_lcd.fnt"/>
-    <font id="LcdSmall" filename="stride_small.fnt"/>
-    <font id="DayNum" filename="stride_num.fnt"/>
-    <font id="Word" filename="stride_word.fnt"/>
+    <font id="LcdTime" filename="stride_time.fnt"/>
+    <font id="LcdSmall" filename="stride_text.fnt"/>
+    <font id="DayNum" filename="stride_day.fnt"/>
 </fonts>

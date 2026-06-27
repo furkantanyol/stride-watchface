@@ -7,15 +7,15 @@ using Toybox.Time.Gregorian as Gregorian;
 using Toybox.ActivityMonitor as Act;
 using Toybox.Application as App;
 
-// The Stride watch face: a round take on the Casio G-Shock GBD-200 LCD.
-// Small steps (left) and distance (right) ride the top, the seven-day step
-// bars are the hero, and the time (a real DSEG7 LCD font) sits below with the
-// date beside it and motivating readouts under that. Pure mono on black, one
-// red accent on today. Positions are fractions of width/height so the same
-// code renders on the simulator and the 240x240 device.
+// The Stride watch face. Steps (left) and distance (right) ride the top, the
+// seven-day step bars are the hero, the time sits below with the date beside
+// it, and recovery / body battery / temp run along the bottom. One JetBrains
+// Mono typeface throughout; pure mono on black with one amber accent on today.
+// Positions are fractions of width/height so the same code renders on the
+// simulator and the 240x240 device.
 class StrideView extends Ui.WatchFace {
 
-    hidden const TOP_Y    = 0.125;   // centre of the steps / distance row
+    hidden const TOP_Y    = 0.160;   // centre of the steps / distance row
     hidden const WEEK_BASE_Y = 0.450;   // bar baseline (0%)
     hidden const WEEK_MAX_H  = 0.250;   // plot height (120% of goal)
     hidden const TIME_CY  = 0.655;   // vertical centre of the time band
@@ -34,9 +34,9 @@ class StrideView extends Ui.WatchFace {
     hidden var _height;
     hidden var _cx;
     hidden var _cy;
-    hidden var _lcd;     // DSEG7 LCD font for the time
-    hidden var _small;   // DSEG7 for the small numeric readouts
-    hidden var _word;    // condensed sans for words and units
+    hidden var _lcd;     // JetBrains Mono, large — the time
+    hidden var _small;   // JetBrains Mono, small — every number, word, and unit
+    hidden var _word;    // alias of _small (one typeface throughout)
 
     function initialize() {
         WatchFace.initialize();
@@ -47,9 +47,11 @@ class StrideView extends Ui.WatchFace {
         _height = dc.getHeight();
         _cx = _width / 2;
         _cy = _height / 2;
+        // One JetBrains Mono typeface throughout: big for the time, small for
+        // every number, word, and unit (the same font fills _small and _word).
         _lcd = Ui.loadResource(Rez.Fonts.LcdTime);
         _small = Ui.loadResource(Rez.Fonts.LcdSmall);
-        _word = Ui.loadResource(Rez.Fonts.Word);
+        _word = _small;
     }
 
     function onShow() {
@@ -88,10 +90,13 @@ class StrideView extends Ui.WatchFace {
         var days = StepHistory.lastSevenDays(steps, dayNumber);
 
         drawTopMetrics(dc, steps, distanceCm);
-        WeekChart.draw(dc, accent, days, dayLabels(now), goal, _cx, _width,
-            (_height * WEEK_BASE_Y).toNumber(), (_height * WEEK_MAX_H).toNumber());
-        drawTimeAndDate(dc, clock, greg);
-        drawBottomRow(dc);
+        WeekChart.draw(dc, accent, days, dayLabels(now), goal, _width,
+            (_height * WEEK_BASE_Y).toNumber(), (_height * WEEK_MAX_H).toNumber(),
+            settingNumber("BarStyle", 0) == 1);
+        drawTimeAndDate(dc, clock, greg, accent);
+        if (settingBool("ShowMetrics", true)) {
+            drawBottomRow(dc);
+        }
     }
 
     // ---------- top corners: steps (left), distance (right) ----------
@@ -119,54 +124,48 @@ class StrideView extends Ui.WatchFace {
         dc.drawText(sx + nw + 1, cy, _word, unit, Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
     }
 
-    // Distance + "km" unit. The decimal point is hand-drawn (DSEG7's dot can't
-    // render on Garmin), the unit conveys the metric so there's no label.
+    // Distance + "km" — the font has a real decimal point now.
     hidden function drawDistance(dc, cx, cy, distanceCm) {
-        var km = distanceCm / CM_PER_KM;
-        var whole = km.toNumber();
-        var frac = ((km - whole) * 100 + 0.5).toNumber();
-        var intPart = whole.toString();
-        var fracPart = frac.format("%02d");
-
-        var iw = dc.getTextWidthInPixels(intPart, _small);
-        var fw = dc.getTextWidthInPixels(fracPart, _small);
-        var uw = dc.getTextWidthInPixels("km", _word);
-        var dotW = 5;
-        var ugap = 3;
-        var sx = cx - ((iw + dotW + fw + ugap + uw) / 2);
-
-        dc.setColor(Theme.SEG_LIT, Gfx.COLOR_TRANSPARENT);
-        dc.drawText(sx, cy, _small, intPart, Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
-        dc.fillRectangle(sx + iw + 1, cy + 4, 3, 3);
-        dc.drawText(sx + iw + dotW, cy, _small, fracPart, Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
-        dc.setColor(Theme.MUTED, Gfx.COLOR_TRANSPARENT);
-        dc.drawText(sx + iw + dotW + fw + ugap, cy, _word, "km", Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
+        drawNumUnit(dc, cx, cy, (distanceCm / CM_PER_KM).format("%.2f"), "km");
     }
 
-    // ---------- time (DSEG7) with the date stacked beside it ----------
+    // ---------- time with the date stacked beside it ----------
 
-    hidden function drawTimeAndDate(dc, clock, greg) {
+    hidden function drawTimeAndDate(dc, clock, greg, accent) {
         var ds = Sys.getDeviceSettings();
         var hour = clock.hour;
         if (!ds.is24Hour) {
             hour = hour % 12;
             if (hour == 0) { hour = 12; }
         }
-        var hourStr = ds.is24Hour ? hour.format("%02d") : hour.format("%d");
-        var timeText = hourStr + ":" + clock.min.format("%02d");
+        var padHour = ds.is24Hour || settingBool("LeadingZero", false);
+        var hourStr = padHour ? hour.format("%02d") : hour.format("%d");
+        var minStr = clock.min.format("%02d");
+        var colon = settingNumber("TimeStyle", 0) == 0;   // else colored minutes, no colon
 
-        var segW = dc.getTextWidthInPixels(timeText, _lcd);
         var line1 = greg.month.format("%d") + "/" + greg.day.format("%d");
         var line2 = WDAY[greg.day_of_week];
         var dateW = maxWidth(dc, line1, line2);
 
+        var hw = dc.getTextWidthInPixels(hourStr, _lcd);
+        var sepW = colon ? dc.getTextWidthInPixels(":", _lcd) : 0;
+        var mw = dc.getTextWidthInPixels(minStr, _lcd);
+        var segW = hw + sepW + mw;
+
         var x = _cx - ((segW + DATE_PAD + dateW) / 2);
         var cy = (_height * TIME_CY).toNumber();
 
-        // No ghost skeleton: at the panel's 4 grayscale levels the only "faint"
-        // option (#555) competes with the lit digits and muddies the time.
         dc.setColor(Theme.SEG_LIT, Gfx.COLOR_TRANSPARENT);
-        dc.drawText(x, cy, _lcd, timeText, Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
+        dc.drawText(x, cy, _lcd, hourStr, Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
+        var mx = x + hw;
+        if (colon) {
+            dc.drawText(mx, cy, _lcd, ":", Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
+            mx += sepW;
+        }
+        var minColor = colon ? Theme.SEG_LIT
+            : (settingNumber("MinutesColor", 0) == 1 ? accent : Theme.MUTED);
+        dc.setColor(minColor, Gfx.COLOR_TRANSPARENT);
+        dc.drawText(mx, cy, _lcd, minStr, Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
 
         var dateX = x + segW + DATE_PAD;
         dc.setColor(Theme.SEG_LIT, Gfx.COLOR_TRANSPARENT);
@@ -234,6 +233,11 @@ class StrideView extends Ui.WatchFace {
     }
 
     hidden function settingNumber(key, fallback) {
+        var v = App.Properties.getValue(key);
+        return v == null ? fallback : v;
+    }
+
+    hidden function settingBool(key, fallback) {
         var v = App.Properties.getValue(key);
         return v == null ? fallback : v;
     }

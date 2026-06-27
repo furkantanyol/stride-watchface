@@ -27,16 +27,15 @@ There is **no ghost skeleton behind the time**: at four grayscale levels the onl
 
 ## Typography
 
-Four bitmap fonts ship in `resources/fonts/`, generated from TTFs by `tools/genfont.py` (white-on-transparent so Garmin tints them with `setColor`).
+**One typeface throughout — JetBrains Mono Bold** — a clean, highly legible monospace. Three bitmap sizes ship in `resources/fonts/`, generated from the TTF by `tools/genfont.py` (white-on-transparent so Garmin tints them with `setColor`).
 
-| Font       | Source                      | Used for                                  |
-|------------|-----------------------------|-------------------------------------------|
-| `LcdTime`  | DSEG7 Classic Bold, ~38px   | The time (7-segment LCD)                   |
-| `LcdSmall` | DSEG7 Classic Bold, ~15px   | Every small number: steps, distance, recovery, body, temp |
-| `DayNum`   | Arial Narrow regular, ~10px | Day numbers under the bars                 |
-| `Word`     | Arial Narrow Bold, ~15px    | All words/units: `km h % ° `, date `6/27` and weekday |
+| Font       | Size  | Used for                                                  |
+|------------|-------|-----------------------------------------------------------|
+| `LcdTime`  | ~30px | The time (`stride_time`, digits + colon)                  |
+| `LcdSmall` | ~13px | Every number, word, and unit (`stride_text`, full charset) — `_small` and `_word` both point here |
+| `DayNum`   | ~10px | Day numbers under the bars (`stride_day`, digits)         |
 
-Every number is DSEG7; every word/unit is the condensed sans — one cohesive instrument. The distance decimal point is hand-drawn (`fillRectangle`) because DSEG7's `.` glyph can't render on Garmin.
+Rendered with anti-aliasing **on** (a smooth font, unlike a pixel font). The font has real `.` and `:` glyphs, so the distance decimal and the time colon are native — nothing is hand-drawn. (An earlier DSEG7-segment / Silkscreen-pixel direction was tried and dropped in favor of this.)
 
 ## Layout proportions
 
