@@ -2,16 +2,19 @@ using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 using Toybox.Lang as Lang;
 
-// The last-seven-days step bars — the GBD-200's central chart and the hero of
-// the face. A left axis runs 0% to 100% (100% is the goal) with tick marks at
-// each quarter. Each bar is one day, numbered by date below in a tiny font.
-// Today is the accent; consecutive bars reaching the top are your streak.
+// The last-seven-days step chart — the hero. Each day is a stack of 10% LCD
+// blocks (the G-Shock segment grain). A day that cleared the goal is lit white,
+// one that fell short is muted gray, today is the accent. The dashed goal line
+// sits below the top with headroom so an over-goal day visibly crosses it — a
+// run of bars over the line reads as a streak.
 module WeekChart {
 
-    const BAR_W_RATIO = 0.066;   // thinner bars, more breathing room
+    const BAR_W_RATIO = 0.066;
     const GAP_RATIO   = 0.022;
-    const SIDE_MARGIN = 0.075;   // keep the chart off the round edges
-    const TICKS = [0, 25, 50, 75, 100];
+    const BLOCK_H   = 4;
+    const BLOCK_GAP = 1;
+    const SCALE_PCT = 120;   // plot tops out at 120% of goal (12 blocks)
+    const GOAL_PCT  = 100;
 
     var dayFont = null;
 
@@ -28,27 +31,30 @@ module WeekChart {
         if (gap < 2) { gap = 2; }
 
         var totalW = (n * barW) + ((n - 1) * gap);
-        var axisRoom = (width * 0.075).toNumber();
-        var startX = cx - (totalW / 2) + (axisRoom / 2);
-        var axisX = startX - 7;
-        var topY = baseY - maxH;
+        var startX = cx - (totalW / 2);
+        var unit = BLOCK_H + BLOCK_GAP;
+        var maxBlocks = maxH / unit;
 
-        drawAxis(dc, axisX, topY, baseY, maxH);
+        var goalY = baseY - ((GOAL_PCT * maxH) / SCALE_PCT);
+        dc.setPenWidth(1);
+        dc.setColor(Theme.SEG_GHOST, Gfx.COLOR_TRANSPARENT);
+        dashedLine(dc, startX, startX + totalW, goalY);
 
         for (var i = 0; i < n; i += 1) {
             var x = startX + (i * (barW + gap));
             var value = days[i];
             var isToday = (i == todayIndex);
 
-            if (value <= 0) {
-                dc.setColor(Theme.STUB, Gfx.COLOR_TRANSPARENT);
-                dc.fillRectangle(x, baseY - 3, barW, 3);
-            } else {
-                var h = ((value.toFloat() / goal) * maxH).toNumber();
-                if (h > maxH) { h = maxH; }
-                if (h < 3) { h = 3; }
-                dc.setColor(isToday ? accent : Theme.BAR_FILL, Gfx.COLOR_TRANSPARENT);
-                dc.fillRectangle(x, baseY - h, barW, h);
+            var pct = (goal > 0) ? (value * 100 / goal) : 0;
+            if (pct > SCALE_PCT) { pct = SCALE_PCT; }
+            var blocks = (pct + 5) / 10;            // round to the nearest 10%
+            if (value > 0 && blocks < 1) { blocks = 1; }
+            if (blocks > maxBlocks) { blocks = maxBlocks; }
+
+            var color = isToday ? accent : ((value >= goal && value > 0) ? Theme.SEG_LIT : Theme.MUTED);
+            dc.setColor(color, Gfx.COLOR_TRANSPARENT);
+            for (var b = 0; b < blocks; b += 1) {
+                dc.fillRectangle(x, baseY - ((b + 1) * unit) + BLOCK_GAP, barW, BLOCK_H);
             }
 
             dc.setColor(isToday ? accent : Theme.MUTED, Gfx.COLOR_TRANSPARENT);
@@ -56,16 +62,12 @@ module WeekChart {
         }
     }
 
-    function drawAxis(dc as Gfx.Dc, axisX as Lang.Number, topY as Lang.Number,
-                      baseY as Lang.Number, maxH as Lang.Number) as Void {
-        dc.setPenWidth(1);
-        dc.setColor(Theme.MUTED, Gfx.COLOR_TRANSPARENT);
-        dc.drawLine(axisX, topY, axisX, baseY);
-        for (var k = 0; k < TICKS.size(); k += 1) {
-            var ty = baseY - ((TICKS[k] * maxH) / 100);
-            dc.drawLine(axisX - 3, ty, axisX, ty);
+    function dashedLine(dc as Gfx.Dc, x1 as Lang.Number, x2 as Lang.Number, y as Lang.Number) as Void {
+        var x = x1;
+        while (x < x2) {
+            var xe = (x + 3 > x2) ? x2 : x + 3;
+            dc.drawLine(x, y, xe, y);
+            x += 6;
         }
-        dc.drawText(axisX - 5, topY - 6, Gfx.FONT_XTINY, "100", Gfx.TEXT_JUSTIFY_RIGHT);
-        dc.drawText(axisX - 5, baseY - 11, Gfx.FONT_XTINY, "0%", Gfx.TEXT_JUSTIFY_RIGHT);
     }
 }

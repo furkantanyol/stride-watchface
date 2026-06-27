@@ -2,24 +2,19 @@ using Toybox.Graphics as Gfx;
 using Toybox.Application as App;
 using Toybox.Lang as Lang;
 
-// Stride color system. A G-Shock GBD-200 surface: midnight black, light-gray
-// LCD segments, one red accent on today's data only. All grays are NEUTRAL
-// (R=G=B) so nothing quantizes to a blue/purple tint on the 64-color MIP
-// panel. Nothing here inverts.
+// Stride color system, from the Claude Design tokens. The MIP panel quantizes
+// each channel to one of four levels (00 / 55 / AA / FF) → 64 colors, so every
+// token is held on that grid and nothing shifts on-panel. Grays are strictly
+// R=G=B (any blue tint quantizes to purple). One accent, no gradients.
 module Theme {
-    const BACKGROUND = 0x000000;   // true black for the MIP panel
-    const SEG_LIT    = 0xFFFFFF;   // a lit LCD segment (time, distance)
-    const SEG_GHOST  = 0x1A1A1A;   // an unlit segment, the faint LCD skeleton
-    const BAR_FILL   = 0xCCCCCC;   // a completed day's bar (~80% white, solid)
-    const MUTED      = 0x8C8C8C;   // labels, axis, date, weekday letters
-    const MUTED_DIM  = 0x4A4A4A;   // axis ticks
-    const STUB       = 0x242424;   // empty-day bars
-    const BOX_EDGE   = 0x5A5A5A;   // boxed-label border
+    const BACKGROUND = 0x000000;   // panel base / off pixels
+    const SEG_LIT    = 0xFFFFFF;   // time, readouts, days that cleared the goal
+    const MUTED      = 0xAAAAAA;   // labels, axis, day numbers, days under goal
+    const SEG_GHOST  = 0x555555;   // unlit "88:88" shadow behind the time; goal line
 
-    const ACCENT_DEFAULT = 0xE0301A;   // GBD-200 "RUN" red
+    const ACCENT_DEFAULT = 0xFFAA00;   // amber — today's bar and date number
 
-    // The accent is the only color the user can change. It marks today's data:
-    // today's bar and today's date label. Everything else is mono.
+    // The accent is the only color the user can change. It marks today's data.
     function accent() as Lang.Number {
         var c = App.Properties.getValue("AccentColor") as Lang.Number?;
         if (c == null) {
