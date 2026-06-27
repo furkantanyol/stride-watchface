@@ -2,42 +2,39 @@
 
 ## Purpose
 
-One job: get the wearer to 10,000 steps a day, and make the time effortless to read. Everything else is noise and is excluded on purpose.
+One job: get the wearer to 10,000 steps a day, and make the time effortless to read. Everything else is noise and is excluded on purpose. The look is a faithful homage to the Casio G-Shock GBD-200 LCD, adapted to a round 240x240 display.
 
 ## The one screen
 
-A round, midnight-black face. Top to bottom:
+A round, midnight-black face, pure monochrome with a single red accent on today's data. Top to bottom:
 
-1. Day and date, small and muted.
-2. The time, large, white, the hero element.
-3. Today's steps against the goal, the step number in the accent color.
-4. A streak pill: consecutive days you hit 10k.
-5. A Monday-to-Sunday bar chart of the week's steps, with a goal line, today's bar in the accent color.
-6. A progress arc around the rim showing today's percentage toward 10k.
-7. Optional and off by default: a small heart rate and battery readout near the bottom.
+1. **Top corners.** Today's step count (small, top-left) and today's distance in km (small, top-right). Plain readouts, like the GBD's corner indicators.
+2. **The step chart — the hero.** A seven-day bar chart filling the upper-middle. A left axis runs 0% to 100% of the daily goal with tick marks at each quarter. Each bar is one day, numbered by date below. Today's bar and its date number are red; consecutive bars reaching the top read as your streak at a glance.
+3. **The time.** Large, in a real DSEG7 LCD font, lower third. A dim "88:88" ghost skeleton sits behind the lit digits, the way a real segment LCD looks. 12h/24h follows the watch's own setting; there is no AM/PM indicator.
+4. **The date,** stacked beside the time: month/day over the weekday (e.g. `6/27` over `SAT`).
+5. **Bottom row.** Three motivating readouts: recovery hours, Body Battery, and current temperature. Each hides cleanly if its data is unavailable.
 
 ## The coaching model
 
-A watch face cannot buzz or notify. It can only show. So Stride coaches through three visual levers, all passive and always honest:
+A watch face cannot buzz or notify. It can only show. Stride coaches through honest, passive visual pressure:
 
-1. The rim arc. It fills clockwise from the top as you approach 10k. An empty arc late in the day is a quiet accusation.
-2. The pill. Before the goal it reads "N day streak" when a streak is alive, otherwise it shows the remaining steps ("2,580 to go"). Once you cross 10k it reads "10k done". The streak is the strongest lever: loss aversion. Miss a day and it resets to zero, and you feel it.
-3. The week bars. Seeing five strong days and one stub builds self-accountability without a word.
+1. **The chart.** Seven days of bars against the goal line. Seeing five strong days and one stub builds self-accountability without a word. A run of bars over the line *is* your streak, made visible.
+2. **Today in red.** Today's bar and date number are the one spot of color. A short red bar late in the day is a quiet accusation.
+3. **The corner step count** ticks up through the day toward the goal the bars are measured against.
 
-If active nudging is ever wanted (a buzz at 6pm when under target), that is the device's built-in move alert or a separate companion widget, never this face. Keep the move alert enabled on the watch.
+If active nudging is ever wanted (a buzz at 6pm when under target), that is the device's built-in move alert, never this face. Keep the move alert enabled on the watch.
 
 ## Settings
 
-Three, exposed in the Connect IQ phone app:
+Two, exposed in the Connect IQ phone app:
 
-- Daily step goal. Default 10,000. The whole face scales to this number.
-- Accent color. A short curated list: Teal, Amber, Ice, White. Default Teal.
-- Show heart rate and battery. Default off, to keep the face minimal.
+- **Daily step goal.** Default 10,000. The chart's 100% line scales to this number.
+- **Accent color.** A short curated list: Red (default), Amber, Ice, White. Applied only to today's bar and today's date number.
 
 ## Explicitly out of scope (YAGNI)
 
-No seconds by default, no weather, no notifications count, no music controls, no sunrise/sunset, no floors or elevation (the FR245 has no barometer), no multiple data screens, no animations, no menus. Adding any of these is a regression against the design goal unless explicitly requested.
+No seconds by default, no weather forecast, no notifications count, no music controls, no sunrise/sunset, no floors or elevation (the FR245 has no barometer), no multiple data screens, no animations, no menus. The streak pill and rim progress arc from earlier concepts were intentionally cut — the chart carries the streak and the goal. Adding anything back is a regression against the design goal unless explicitly requested.
 
 ## Success criteria
 
-The wearer can read the time in a glance in sunlight, knows instantly how close they are to 10k, and feels the streak. The face looks expensive and calm. Battery life is unaffected versus a stock face.
+The wearer can read the time in a glance in sunlight, sees instantly where today's bar sits against the goal line and how the week is trending, and the face looks like a calm, expensive LCD instrument. Battery life is unaffected versus a stock face.

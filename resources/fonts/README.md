@@ -1,15 +1,17 @@
 # Fonts
 
-Stride ships with no custom font. It uses Garmin system fonts to stay inside the FR245 memory budget. The time uses `Graphics.FONT_NUMBER_THAI_HOT`, everything else uses the tiny and small system fonts. See `docs/DESIGN.md` for the exact mapping.
+Stride ships two small bitmap fonts, generated from TTFs by `tools/genfont.py`
+(white-on-transparent glyphs that Garmin tints with `setColor`). Everything
+else uses Garmin system fonts to stay inside the FR245M memory budget.
 
-## Optional custom font (enhancement, not required)
+| Resource id | Files                     | Source TTF                | Use                    |
+|-------------|---------------------------|---------------------------|------------------------|
+| `LcdTime`   | `stride_lcd.fnt` / `.png` | DSEG7 Classic Bold, ~38px | The time (7-seg LCD)   |
+| `DayNum`    | `stride_num.fnt` / `.png` | Arial Narrow regular, ~14 | Day numbers under bars |
 
-If you want a more refined numeral for the time, add a single `.fnt` plus its `.png` glyph sheet here and register it in a `resources/fonts/fonts.xml`:
+DSEG7 is the open-source LCD font by keshikan (SIL Open Font License):
+https://github.com/keshikan/DSEG
 
-```xml
-<fonts>
-    <font id="TimeFont" filename="stride_time.fnt"/>
-</fonts>
-```
-
-Then swap `FONT_NUMBER_THAI_HOT` in `StrideView.mc` for `Ui.loadResource(Rez.Fonts.TimeFont)`. Only do this after confirming the memory headroom in the simulator. A custom font is the first thing to cut if the face gets close to the limit.
+To regenerate either, see `tools/README.md`. The time font carries the digits
+and `:`; the ghost "88:88" skeleton behind the live time relies on DSEG7
+lighting every segment for `8`.
