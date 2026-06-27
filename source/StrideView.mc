@@ -15,14 +15,12 @@ using Toybox.Application as App;
 // code renders on the simulator and the 240x240 device.
 class StrideView extends Ui.WatchFace {
 
-    hidden const TOP_Y    = 0.095;   // steps (left) + distance (right)
+    hidden const TOP_Y    = 0.105;   // centre of the steps / distance row
     hidden const WEEK_BASE_Y = 0.490;   // bar baseline (0%)
     hidden const WEEK_MAX_H  = 0.250;   // plot height (120% of goal)
     hidden const TIME_CY  = 0.655;   // vertical centre of the time band
     hidden const DATE_DY  = 10;      // px each date line sits from the time centre
-    hidden const BOTTOM_Y = 0.780;   // recovery / body battery / weather labels
-    hidden const STAT_LABEL_DY = 16; // px from a top value down to its label
-    hidden const STAT_VALUE_DY = 18; // px from a bottom label down to its value centre
+    hidden const BOTTOM_Y = 0.815;   // centre of the recovery / body / temp row
 
     hidden const DATE_PAD   = 8;     // px between the time and the date block
     hidden const CM_PER_KM  = 100000.0;
@@ -99,14 +97,26 @@ class StrideView extends Ui.WatchFace {
     // ---------- top corners: steps (left), distance (right) ----------
 
     hidden function drawTopMetrics(dc, steps, distanceCm) {
-        var y = (_height * TOP_Y).toNumber();
-        drawTopStat(dc, _width * 0.28, y, steps.toString(), "STEPS");
-        drawDistanceStat(dc, _width * 0.72, y, distanceCm);
+        var cy = (_height * TOP_Y).toNumber();
+        drawSteps(dc, (_width * 0.30).toNumber(), cy, steps);
+        drawDistance(dc, (_width * 0.70).toNumber(), cy, distanceCm);
     }
 
-    // Distance needs a decimal point, which DSEG7 can't render on Garmin, so
-    // the dot is drawn by hand between the whole and fractional DSEG7 digits.
-    hidden function drawDistanceStat(dc, cx, y, distanceCm) {
+    // Footprint icon + step count, group-centered on cy.
+    hidden function drawSteps(dc, cx, cy, steps) {
+        var num = steps.toString();
+        var nw = dc.getTextWidthInPixels(num, _small);
+        var iconW = 8;
+        var gap = 4;
+        var sx = cx - ((iconW + gap + nw) / 2);
+        Icons.footprint(dc, sx, cy - 7, Theme.SEG_LIT);
+        dc.setColor(Theme.SEG_LIT, Gfx.COLOR_TRANSPARENT);
+        dc.drawText(sx + iconW + gap, cy, _small, num, Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
+    }
+
+    // Distance + "km" unit. The decimal point is hand-drawn (DSEG7's dot can't
+    // render on Garmin), the unit conveys the metric so there's no label.
+    hidden function drawDistance(dc, cx, cy, distanceCm) {
         var km = distanceCm / CM_PER_KM;
         var whole = km.toNumber();
         var frac = ((km - whole) * 100 + 0.5).toNumber();
@@ -115,24 +125,17 @@ class StrideView extends Ui.WatchFace {
 
         var iw = dc.getTextWidthInPixels(intPart, _small);
         var fw = dc.getTextWidthInPixels(fracPart, _small);
+        var uw = dc.getTextWidthInPixels("km", _word);
         var dotW = 5;
-        var x = cx - ((iw + dotW + fw) / 2);
+        var ugap = 3;
+        var sx = cx - ((iw + dotW + fw + ugap + uw) / 2);
 
         dc.setColor(Theme.SEG_LIT, Gfx.COLOR_TRANSPARENT);
-        dc.drawText(x, y, _small, intPart, Gfx.TEXT_JUSTIFY_LEFT);
-        dc.fillRectangle(x + iw + 1, y + 11, 3, 3);
-        dc.drawText(x + iw + dotW, y, _small, fracPart, Gfx.TEXT_JUSTIFY_LEFT);
-
+        dc.drawText(sx, cy, _small, intPart, Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
+        dc.fillRectangle(sx + iw + 1, cy + 4, 3, 3);
+        dc.drawText(sx + iw + dotW, cy, _small, fracPart, Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
         dc.setColor(Theme.MUTED, Gfx.COLOR_TRANSPARENT);
-        dc.drawText(cx, y + STAT_LABEL_DY, _word, "KM", Gfx.TEXT_JUSTIFY_CENTER);
-    }
-
-    // A top-corner stat: DSEG7 value (lit) over a small condensed label.
-    hidden function drawTopStat(dc, cx, y, value, label) {
-        dc.setColor(Theme.SEG_LIT, Gfx.COLOR_TRANSPARENT);
-        dc.drawText(cx, y, _small, value, Gfx.TEXT_JUSTIFY_CENTER);
-        dc.setColor(Theme.MUTED, Gfx.COLOR_TRANSPARENT);
-        dc.drawText(cx, y + STAT_LABEL_DY, _word, label, Gfx.TEXT_JUSTIFY_CENTER);
+        dc.drawText(sx + iw + dotW + fw + ugap, cy, _word, "km", Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
     }
 
     // ---------- time (DSEG7) with the date stacked beside it ----------
@@ -170,32 +173,59 @@ class StrideView extends Ui.WatchFace {
     // ---------- bottom readouts: recovery, body battery, weather ----------
 
     hidden function drawBottomRow(dc) {
-        var y = (_height * BOTTOM_Y).toNumber();
-        drawBottomStat(dc, _width * 0.265, y, "RECOV", Metrics.recoveryHours(), "H");
-        drawBottomStat(dc, _width * 0.50, y, "BODY", Metrics.bodyBattery(), "%");
-        drawBottomStat(dc, _width * 0.735, y, "TEMP", Metrics.temperature(), "°");
+        var cy = (_height * BOTTOM_Y).toNumber();
+        drawRecovery(dc, (_width * 0.255).toNumber(), cy, Metrics.recoveryHours());
+        drawBody(dc, (_width * 0.50).toNumber(), cy, Metrics.bodyBattery());
+        drawTemp(dc, (_width * 0.745).toNumber(), cy, Metrics.temperature());
     }
 
-    // A bottom stat: condensed label over a DSEG7 value + condensed unit,
-    // group-centered. Shows "--" when the metric is absent.
-    hidden function drawBottomStat(dc, cx, y, label, value, unit) {
-        dc.setColor(Theme.MUTED, Gfx.COLOR_TRANSPARENT);
-        dc.drawText(cx, y, _word, label, Gfx.TEXT_JUSTIFY_CENTER);
-
-        var vcy = y + STAT_VALUE_DY;
-        if (value == null) {
-            dc.setColor(Theme.SEG_LIT, Gfx.COLOR_TRANSPARENT);
-            dc.drawText(cx, vcy, _word, "--", Gfx.TEXT_JUSTIFY_CENTER | Gfx.TEXT_JUSTIFY_VCENTER);
-            return;
-        }
-        var num = value.format("%d");
+    // "REC" keeps a label because bare hours would be ambiguous.
+    hidden function drawRecovery(dc, cx, cy, hours) {
+        if (hours == null) { drawDashes(dc, cx, cy); return; }
+        var num = hours.toString();
+        var pw = dc.getTextWidthInPixels("REC", _word);
         var nw = dc.getTextWidthInPixels(num, _small);
-        var uw = dc.getTextWidthInPixels(unit, _word);
-        var sx = cx - ((nw + uw) / 2);
-        dc.setColor(Theme.SEG_LIT, Gfx.COLOR_TRANSPARENT);
-        dc.drawText(sx, vcy, _small, num, Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
+        var uw = dc.getTextWidthInPixels("H", _word);
+        var sx = cx - ((pw + 4 + nw + 1 + uw) / 2);
         dc.setColor(Theme.MUTED, Gfx.COLOR_TRANSPARENT);
-        dc.drawText(sx + nw, vcy, _word, unit, Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
+        dc.drawText(sx, cy, _word, "REC", Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
+        dc.setColor(Theme.SEG_LIT, Gfx.COLOR_TRANSPARENT);
+        dc.drawText(sx + pw + 4, cy, _small, num, Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
+        dc.setColor(Theme.MUTED, Gfx.COLOR_TRANSPARENT);
+        dc.drawText(sx + pw + 4 + nw + 1, cy, _word, "H", Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
+    }
+
+    // Battery glyph (filled to level) + percentage — the glyph is the label.
+    hidden function drawBody(dc, cx, cy, pct) {
+        if (pct == null) { drawDashes(dc, cx, cy); return; }
+        var num = pct.toString();
+        var iconW = 14;
+        var nw = dc.getTextWidthInPixels(num, _small);
+        var uw = dc.getTextWidthInPixels("%", _word);
+        var sx = cx - ((iconW + 4 + nw + 1 + uw) / 2);
+        Icons.battery(dc, sx, cy - 3, pct, Theme.MUTED, Theme.SEG_LIT);
+        dc.setColor(Theme.SEG_LIT, Gfx.COLOR_TRANSPARENT);
+        dc.drawText(sx + iconW + 4, cy, _small, num, Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
+        dc.setColor(Theme.MUTED, Gfx.COLOR_TRANSPARENT);
+        dc.drawText(sx + iconW + 4 + nw + 1, cy, _word, "%", Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
+    }
+
+    // Just the degrees — the ° is the label.
+    hidden function drawTemp(dc, cx, cy, deg) {
+        if (deg == null) { drawDashes(dc, cx, cy); return; }
+        var num = deg.toString();
+        var nw = dc.getTextWidthInPixels(num, _small);
+        var uw = dc.getTextWidthInPixels("°", _word);
+        var sx = cx - ((nw + 1 + uw) / 2);
+        dc.setColor(Theme.SEG_LIT, Gfx.COLOR_TRANSPARENT);
+        dc.drawText(sx, cy, _small, num, Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
+        dc.setColor(Theme.MUTED, Gfx.COLOR_TRANSPARENT);
+        dc.drawText(sx + nw + 1, cy - 4, _word, "°", Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
+    }
+
+    hidden function drawDashes(dc, cx, cy) {
+        dc.setColor(Theme.MUTED, Gfx.COLOR_TRANSPARENT);
+        dc.drawText(cx, cy, _word, "--", Gfx.TEXT_JUSTIFY_CENTER | Gfx.TEXT_JUSTIFY_VCENTER);
     }
 
     // ---------- helpers ----------
