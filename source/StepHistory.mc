@@ -19,7 +19,7 @@ module StepHistory {
     // `dayNumber` is a local day index (whole days since the epoch).
     function lastSevenDays(todaySteps as Lang.Number, dayNumber as Lang.Number) as Lang.Array<Lang.Number> {
         if (DEMO) {
-            return [7300, 11200, 9100, 12400, 6800, 10300, todaySteps > 0 ? todaySteps : 8600];
+            return [10000, 8400, 10000, 7200, 9100, 10000, todaySteps > 0 ? todaySteps : 9340];
         }
         var data = Storage.getValue("history") as Lang.Dictionary?;
         var values = newWindow();

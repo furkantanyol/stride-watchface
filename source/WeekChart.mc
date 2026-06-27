@@ -2,19 +2,17 @@ using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 using Toybox.Lang as Lang;
 
-// The last-seven-days step chart — the hero. Each day is a stack of 10% LCD
-// blocks (the G-Shock segment grain). A day that cleared the goal is lit white,
-// one that fell short is muted gray, today is the accent. The dashed goal line
-// sits below the top with headroom so an over-goal day visibly crosses it — a
-// run of bars over the line reads as a streak.
+// The last-seven-days step chart — the hero. Each day is a stack of 10% blocks
+// (the G-Shock segment grain). The goal is the ceiling: 10 blocks fill the plot
+// and a day at or over the goal fills to the dashed line at the top. A day that
+// cleared the goal is lit white, one that fell short is muted gray, today is
+// the accent. A run of full bars reads as a streak.
 module WeekChart {
 
     const BAR_W_RATIO = 0.066;
     const GAP_RATIO   = 0.022;
-    const BLOCK_H   = 4;
     const BLOCK_GAP = 1;
-    const SCALE_PCT = 120;   // plot tops out at 120% of goal (12 blocks)
-    const GOAL_PCT  = 100;
+    const BLOCKS = 10;       // the goal is the ceiling: 10 x 10% fills the plot
 
     var dayFont = null;
 
@@ -33,10 +31,10 @@ module WeekChart {
 
         var totalW = (n * barW) + ((n - 1) * gap);
         var startX = (width / 2) - (totalW / 2);
-        var unit = BLOCK_H + BLOCK_GAP;
-        var maxBlocks = maxH / unit;
+        var unit = maxH / BLOCKS;        // height of one 10% block; 10 blocks = goal = full plot
+        var blockH = unit - BLOCK_GAP;
 
-        var goalY = baseY - ((GOAL_PCT * maxH) / SCALE_PCT);
+        var goalY = baseY - (BLOCKS * unit);   // the goal is the ceiling, at the top
         dc.setPenWidth(1);
         dc.setColor(Theme.SEG_GHOST, Gfx.COLOR_TRANSPARENT);
         dashedLine(dc, startX, startX + totalW, goalY);
@@ -47,10 +45,10 @@ module WeekChart {
             var isToday = (i == todayIndex);
 
             var pct = (goal > 0) ? (value * 100 / goal) : 0;
-            if (pct > SCALE_PCT) { pct = SCALE_PCT; }
-            var blocks = (pct + 5) / 10;            // round to the nearest 10%
+            if (pct > 100) { pct = 100; }            // capped at the goal
+            var blocks = (pct + 5) / 10;             // round to the nearest 10%
             if (value > 0 && blocks < 1) { blocks = 1; }
-            if (blocks > maxBlocks) { blocks = maxBlocks; }
+            if (blocks > BLOCKS) { blocks = BLOCKS; }
 
             var color = isToday ? accent : ((value >= goal && value > 0) ? Theme.SEG_LIT : Theme.MUTED);
             dc.setColor(color, Gfx.COLOR_TRANSPARENT);
@@ -59,7 +57,7 @@ module WeekChart {
                 if (h > 0) { dc.fillRectangle(x, baseY - h, barW, h); }
             } else {
                 for (var b = 0; b < blocks; b += 1) {
-                    dc.fillRectangle(x, baseY - ((b + 1) * unit) + BLOCK_GAP, barW, BLOCK_H);
+                    dc.fillRectangle(x, baseY - ((b + 1) * unit) + BLOCK_GAP, barW, blockH);
                 }
             }
 

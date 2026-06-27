@@ -15,12 +15,16 @@ using Toybox.Application as App;
 // simulator and the 240x240 device.
 class StrideView extends Ui.WatchFace {
 
-    hidden const TOP_Y    = 0.160;   // centre of the steps / distance row
-    hidden const WEEK_BASE_Y = 0.450;   // bar baseline (0%)
-    hidden const WEEK_MAX_H  = 0.250;   // plot height (120% of goal)
-    hidden const TIME_CY  = 0.655;   // vertical centre of the time band
+    // Vertical rhythm: ~equal whitespace between the four bands (top row,
+    // chart, time, bottom row). The chart sits lower than its content needs so
+    // the top->chart gap matches the others.
+    hidden const TOP_Y    = 0.155;   // centre of the steps / distance row
+    hidden const WEEK_BASE_Y = 0.495;   // bar baseline (0%)
+    hidden const WEEK_MAX_H  = 0.250;   // plot height (= the goal / ceiling)
+
+    hidden const TIME_CY  = 0.685;   // vertical centre of the time band
     hidden const DATE_DY  = 10;      // px each date line sits from the time centre
-    hidden const BOTTOM_Y = 0.815;   // centre of the recovery / body / temp row
+    hidden const BOTTOM_Y = 0.850;   // centre of the recovery / body / temp row
 
     hidden const DATE_PAD   = 8;     // px between the time and the date block
     hidden const CM_PER_KM  = 100000.0;
@@ -86,6 +90,10 @@ class StrideView extends Ui.WatchFace {
         var info = Act.getInfo();
         var steps = (info != null && info.steps != null) ? info.steps : 0;
         var distanceCm = (info != null && info.distance != null) ? info.distance : 0;
+        if (StepHistory.DEMO) {        // populate the face for simulator screenshots
+            steps = 9340;
+            distanceCm = 684000;
+        }
 
         var days = StepHistory.lastSevenDays(steps, dayNumber);
 
