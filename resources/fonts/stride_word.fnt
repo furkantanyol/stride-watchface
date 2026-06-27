@@ -1,0 +1,44 @@
+info face="DSEG7Classic" size=15 bold=1 italic=0 charset="" unicode=0 stretchH=100 smooth=1 aa=1 padding=0,0,0,0 spacing=1,1
+common lineHeight=19 base=15 scaleW=404 scaleH=16 pages=1 packed=0
+page id=0 file="stride_word.png"
+chars count=40
+char id=65 x=2 y=2 width=9 height=11 xoffset=0 yoffset=4 xadvance=9 page=0 chnl=15
+char id=66 x=13 y=2 width=9 height=11 xoffset=0 yoffset=4 xadvance=9 page=0 chnl=15
+char id=67 x=24 y=2 width=9 height=11 xoffset=0 yoffset=4 xadvance=9 page=0 chnl=15
+char id=68 x=35 y=2 width=9 height=11 xoffset=0 yoffset=4 xadvance=9 page=0 chnl=15
+char id=69 x=46 y=2 width=8 height=11 xoffset=0 yoffset=4 xadvance=8 page=0 chnl=15
+char id=70 x=56 y=2 width=8 height=11 xoffset=0 yoffset=4 xadvance=8 page=0 chnl=15
+char id=71 x=66 y=2 width=10 height=11 xoffset=0 yoffset=4 xadvance=10 page=0 chnl=15
+char id=72 x=78 y=2 width=9 height=11 xoffset=0 yoffset=4 xadvance=9 page=0 chnl=15
+char id=73 x=89 y=2 width=3 height=11 xoffset=0 yoffset=4 xadvance=3 page=0 chnl=15
+char id=74 x=94 y=2 width=7 height=11 xoffset=0 yoffset=4 xadvance=7 page=0 chnl=15
+char id=75 x=103 y=2 width=9 height=11 xoffset=0 yoffset=4 xadvance=9 page=0 chnl=15
+char id=76 x=114 y=2 width=8 height=11 xoffset=0 yoffset=4 xadvance=8 page=0 chnl=15
+char id=77 x=124 y=2 width=10 height=11 xoffset=0 yoffset=4 xadvance=10 page=0 chnl=15
+char id=78 x=136 y=2 width=9 height=11 xoffset=0 yoffset=4 xadvance=9 page=0 chnl=15
+char id=79 x=147 y=2 width=10 height=11 xoffset=0 yoffset=4 xadvance=10 page=0 chnl=15
+char id=80 x=159 y=2 width=8 height=11 xoffset=0 yoffset=4 xadvance=8 page=0 chnl=15
+char id=81 x=169 y=2 width=10 height=12 xoffset=0 yoffset=4 xadvance=10 page=0 chnl=15
+char id=82 x=181 y=2 width=9 height=11 xoffset=0 yoffset=4 xadvance=9 page=0 chnl=15
+char id=83 x=192 y=2 width=8 height=11 xoffset=0 yoffset=4 xadvance=8 page=0 chnl=15
+char id=84 x=202 y=2 width=8 height=11 xoffset=0 yoffset=4 xadvance=8 page=0 chnl=15
+char id=85 x=212 y=2 width=9 height=11 xoffset=0 yoffset=4 xadvance=9 page=0 chnl=15
+char id=86 x=223 y=2 width=9 height=11 xoffset=0 yoffset=4 xadvance=8 page=0 chnl=15
+char id=87 x=234 y=2 width=12 height=11 xoffset=0 yoffset=4 xadvance=12 page=0 chnl=15
+char id=88 x=248 y=2 width=9 height=11 xoffset=0 yoffset=4 xadvance=8 page=0 chnl=15
+char id=89 x=259 y=2 width=10 height=11 xoffset=-1 yoffset=4 xadvance=8 page=0 chnl=15
+char id=90 x=271 y=2 width=8 height=11 xoffset=0 yoffset=4 xadvance=8 page=0 chnl=15
+char id=48 x=281 y=2 width=7 height=11 xoffset=0 yoffset=4 xadvance=7 page=0 chnl=15
+char id=49 x=290 y=2 width=7 height=11 xoffset=0 yoffset=4 xadvance=7 page=0 chnl=15
+char id=50 x=299 y=2 width=7 height=11 xoffset=0 yoffset=4 xadvance=7 page=0 chnl=15
+char id=51 x=308 y=2 width=7 height=11 xoffset=0 yoffset=4 xadvance=7 page=0 chnl=15
+char id=52 x=317 y=2 width=7 height=11 xoffset=0 yoffset=4 xadvance=7 page=0 chnl=15
+char id=53 x=326 y=2 width=7 height=11 xoffset=0 yoffset=4 xadvance=7 page=0 chnl=15
+char id=54 x=335 y=2 width=7 height=11 xoffset=0 yoffset=4 xadvance=7 page=0 chnl=15
+char id=55 x=344 y=2 width=7 height=11 xoffset=0 yoffset=4 xadvance=7 page=0 chnl=15
+char id=56 x=353 y=2 width=7 height=11 xoffset=0 yoffset=4 xadvance=7 page=0 chnl=15
+char id=57 x=362 y=2 width=7 height=11 xoffset=0 yoffset=4 xadvance=7 page=0 chnl=15
+char id=47 x=371 y=2 width=5 height=11 xoffset=-1 yoffset=4 xadvance=3 page=0 chnl=15
+char id=37 x=378 y=2 width=11 height=11 xoffset=0 yoffset=4 xadvance=11 page=0 chnl=15
+char id=176 x=391 y=2 width=6 height=11 xoffset=0 yoffset=4 xadvance=6 page=0 chnl=15
+char id=32 x=399 y=2 width=3 height=0 xoffset=0 yoffset=15 xadvance=3 page=0 chnl=15
