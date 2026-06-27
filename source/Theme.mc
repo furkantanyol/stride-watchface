@@ -10,10 +10,12 @@ module Theme {
     const BACKGROUND = 0x000000;   // true black for the MIP panel
     const SEG_LIT    = 0xFFFFFF;   // a lit LCD segment (time, distance)
     const SEG_GHOST  = 0x1A1A1A;   // an unlit segment, the faint LCD skeleton
-    const BAR_FILL   = 0xCCCCCC;   // a completed day's bar (~80% white, solid)
+    // Neutral-gray ramp (R=G=B), brightest to dimmest:
+    const BAR_FILL   = 0xCCCCCC;   // a lit bar segment (a completed day)
     const MUTED      = 0x8C8C8C;   // labels, axis, date, weekday letters
     const MUTED_DIM  = 0x4A4A4A;   // axis ticks
-    const STUB       = 0x242424;   // empty-day bars
+    const BAR_TRACK  = 0x2E2E2E;   // an unlit bar segment (the gauge "ghost" track)
+    const STUB       = 0x242424;   // empty-day baseline marks
     const BOX_EDGE   = 0x5A5A5A;   // boxed-label border
 
     const ACCENT_DEFAULT = 0xE0301A;   // GBD-200 "RUN" red

@@ -11,6 +11,8 @@ module WeekChart {
     const BAR_W_RATIO = 0.066;   // thinner bars, more breathing room
     const GAP_RATIO   = 0.022;
     const SIDE_MARGIN = 0.075;   // keep the chart off the round edges
+    const SEG_H   = 4;           // height of one LCD bar segment
+    const SEG_GAP = 2;           // gap between bar segments
     const TICKS = [0, 25, 50, 75, 100];
 
     var dayFont = null;
@@ -40,19 +42,31 @@ module WeekChart {
             var value = days[i];
             var isToday = (i == todayIndex);
 
-            if (value <= 0) {
-                dc.setColor(Theme.STUB, Gfx.COLOR_TRANSPARENT);
-                dc.fillRectangle(x, baseY - 3, barW, 3);
-            } else {
-                var h = ((value.toFloat() / goal) * maxH).toNumber();
-                if (h > maxH) { h = maxH; }
-                if (h < 3) { h = 3; }
-                dc.setColor(isToday ? accent : Theme.BAR_FILL, Gfx.COLOR_TRANSPARENT);
-                dc.fillRectangle(x, baseY - h, barW, h);
-            }
+            var frac = value.toFloat() / goal;
+            if (frac > 1.0) { frac = 1.0; }
+            drawGaugeBar(dc, x, baseY, barW, maxH, frac, isToday ? accent : Theme.BAR_FILL);
 
             dc.setColor(isToday ? accent : Theme.MUTED, Gfx.COLOR_TRANSPARENT);
             dc.drawText(x + (barW / 2), baseY + 3, dayFont, labels[i], Gfx.TEXT_JUSTIFY_CENTER);
+        }
+    }
+
+    // A bar drawn as a stack of LCD segments: lit up to `frac` of the goal in
+    // `litColor`, the rest a faint ghost track — like the unlit segments behind
+    // the time, and like the GBD bar gauges. Every bar shows the full track, so
+    // an empty day reads as an empty gauge, not a glitch.
+    function drawGaugeBar(dc as Gfx.Dc, x as Lang.Number, baseY as Lang.Number, w as Lang.Number,
+                          maxH as Lang.Number, frac as Lang.Float, litColor as Lang.Number) as Void {
+        var unit = SEG_H + SEG_GAP;
+        var total = maxH / unit;
+        if (total < 1) { total = 1; }
+        var lit = (frac * total + 0.5).toNumber();
+        if (frac > 0.0 && lit < 1) { lit = 1; }
+        if (lit > total) { lit = total; }
+        for (var u = 0; u < total; u += 1) {
+            var top = baseY - ((u + 1) * unit) + SEG_GAP;
+            dc.setColor(u < lit ? litColor : Theme.BAR_TRACK, Gfx.COLOR_TRANSPARENT);
+            dc.fillRectangle(x, top, w, SEG_H);
         }
     }
 
