@@ -6,10 +6,10 @@
 
     <setting propertyKey="@Properties.AccentColor" title="@Strings.SettingAccent">
         <settingConfig type="list">
-            <listEntry value="14692378">Red</listEntry>
-            <listEntry value="15119440">Amber</listEntry>
-            <listEntry value="9357823">Ice</listEntry>
-            <listEntry value="15987954">White</listEntry>
+            <listEntry value="16755200">Amber</listEntry>
+            <listEntry value="16733952">Hot</listEntry>
+            <listEntry value="5614335">Ice</listEntry>
+            <listEntry value="16777215">White</listEntry>
         </settingConfig>
     </setting>
 </settings>

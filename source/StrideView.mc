@@ -15,12 +15,14 @@ using Toybox.Application as App;
 // code renders on the simulator and the 240x240 device.
 class StrideView extends Ui.WatchFace {
 
-    hidden const TOP_Y    = 0.130;   // steps (left) + km (right)
-    hidden const WEEK_BASE_Y = 0.510;   // bar baseline (0%)
-    hidden const WEEK_MAX_H  = 0.250;   // 100% sits this far above the baseline
-    hidden const TIME_CY  = 0.690;   // vertical centre of the time band
+    hidden const TOP_Y    = 0.095;   // steps (left) + distance (right)
+    hidden const WEEK_BASE_Y = 0.490;   // bar baseline (0%)
+    hidden const WEEK_MAX_H  = 0.250;   // plot height (120% of goal)
+    hidden const TIME_CY  = 0.655;   // vertical centre of the time band
     hidden const DATE_DY  = 10;      // px each date line sits from the time centre
-    hidden const BOTTOM_Y = 0.810;   // recovery / body battery / weather
+    hidden const BOTTOM_Y = 0.780;   // recovery / body battery / weather labels
+    hidden const STAT_LABEL_DY = 18; // px from a top value down to its label
+    hidden const STAT_VALUE_DY = 12; // px from a bottom label down to its value
 
     hidden const DATE_PAD   = 8;     // px between the time and the date block
     hidden const CM_PER_KM  = 100000.0;
@@ -94,10 +96,16 @@ class StrideView extends Ui.WatchFace {
 
     hidden function drawTopMetrics(dc, steps, distanceCm) {
         var y = (_height * TOP_Y).toNumber();
+        drawTopStat(dc, _width * 0.28, y, steps.toString(), "STEPS");
+        drawTopStat(dc, _width * 0.72, y, (distanceCm / CM_PER_KM).format("%.2f"), "KM");
+    }
+
+    // A top-corner stat: value (lit) over a small muted label.
+    hidden function drawTopStat(dc, cx, y, value, label) {
         dc.setColor(Theme.SEG_LIT, Gfx.COLOR_TRANSPARENT);
-        dc.drawText(_width * 0.30, y, Gfx.FONT_TINY, commafy(steps), Gfx.TEXT_JUSTIFY_CENTER);
-        var km = (distanceCm / CM_PER_KM).format("%.2f") + "km";
-        dc.drawText(_width * 0.70, y, Gfx.FONT_TINY, km, Gfx.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, y, Gfx.FONT_TINY, value, Gfx.TEXT_JUSTIFY_CENTER);
+        dc.setColor(Theme.MUTED, Gfx.COLOR_TRANSPARENT);
+        dc.drawText(cx, y + STAT_LABEL_DY, Gfx.FONT_XTINY, label, Gfx.TEXT_JUSTIFY_CENTER);
     }
 
     // ---------- time (DSEG7) with the date stacked beside it ----------
@@ -135,17 +143,19 @@ class StrideView extends Ui.WatchFace {
     // ---------- bottom readouts: recovery, body battery, weather ----------
 
     hidden function drawBottomRow(dc) {
-        var parts = "";
-        var recovery = Metrics.recoveryHours();
-        if (recovery != null) { parts = append(parts, "RCV " + recovery.format("%d") + "h"); }
-        var battery = Metrics.bodyBattery();
-        if (battery != null) { parts = append(parts, "BB " + battery.format("%d")); }
-        var temp = Metrics.temperature();
-        if (temp != null) { parts = append(parts, temp.format("%d") + "°"); }
-        if (parts.equals("")) { return; }
+        var y = (_height * BOTTOM_Y).toNumber();
+        drawBottomStat(dc, _width * 0.22, y, "RECOV", Metrics.recoveryHours(), "H");
+        drawBottomStat(dc, _width * 0.50, y, "BODY", Metrics.bodyBattery(), "%");
+        drawBottomStat(dc, _width * 0.78, y, "TEMP", Metrics.temperature(), "°");
+    }
 
+    // A bottom stat: small muted label over a lit value, or "--" when absent.
+    hidden function drawBottomStat(dc, cx, y, label, value, unit) {
         dc.setColor(Theme.MUTED, Gfx.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _height * BOTTOM_Y, Gfx.FONT_XTINY, parts, Gfx.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, y, Gfx.FONT_XTINY, label, Gfx.TEXT_JUSTIFY_CENTER);
+        var text = (value == null) ? "--" : value.format("%d") + unit;
+        dc.setColor(Theme.SEG_LIT, Gfx.COLOR_TRANSPARENT);
+        dc.drawText(cx, y + STAT_VALUE_DY, Gfx.FONT_TINY, text, Gfx.TEXT_JUSTIFY_CENTER);
     }
 
     // ---------- helpers ----------
@@ -177,10 +187,6 @@ class StrideView extends Ui.WatchFace {
         return (wa > wb) ? wa : wb;
     }
 
-    hidden function append(acc, piece) {
-        return acc.equals("") ? piece : acc + "   " + piece;
-    }
-
     hidden function settingNumber(key, fallback) {
         var v = App.Properties.getValue(key);
         return v == null ? fallback : v;
@@ -190,19 +196,5 @@ class StrideView extends Ui.WatchFace {
     hidden function localDayNumber(now, clock) {
         var secs = now.value() + clock.timeZoneOffset;
         return (secs / SECONDS_PER_DAY).toNumber();
-    }
-
-    hidden function commafy(n) {
-        var s = n.toString();
-        var out = "";
-        var count = 0;
-        for (var i = s.length() - 1; i >= 0; i -= 1) {
-            out = s.substring(i, i + 1) + out;
-            count += 1;
-            if (count % 3 == 0 && i > 0) {
-                out = "," + out;
-            }
-        }
-        return out;
     }
 }
