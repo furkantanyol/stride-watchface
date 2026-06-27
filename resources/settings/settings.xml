@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+    <setting propertyKey="@Properties.StepGoal" title="@Strings.SettingStepGoal">
+        <settingConfig type="numeric" min="1000" max="50000"/>
+    </setting>
+
+    <setting propertyKey="@Properties.AccentColor" title="@Strings.SettingAccent">
+        <settingConfig type="list">
+            <listEntry value="14692378">Red</listEntry>
+            <listEntry value="15119440">Amber</listEntry>
+            <listEntry value="9357823">Ice</listEntry>
+            <listEntry value="15987954">White</listEntry>
+        </settingConfig>
+    </setting>
+</settings>

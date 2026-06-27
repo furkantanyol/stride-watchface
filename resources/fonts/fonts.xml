@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fonts>
+    <font id="LcdTime" filename="stride_lcd.fnt"/>
+    <font id="DayNum" filename="stride_num.fnt"/>
+</fonts>
