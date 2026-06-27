@@ -1,7 +1,7 @@
 info face="DSEG7Classic" size=15 bold=1 italic=0 charset="" unicode=0 stretchH=100 smooth=1 aa=1 padding=0,0,0,0 spacing=1,1
-common lineHeight=19 base=15 scaleW=635 scaleH=18 pages=1 packed=0
+common lineHeight=19 base=15 scaleW=641 scaleH=18 pages=1 packed=0
 page id=0 file="stride_word.png"
-chars count=66
+chars count=67
 char id=65 x=2 y=2 width=9 height=11 xoffset=0 yoffset=4 xadvance=9 page=0 chnl=15
 char id=66 x=13 y=2 width=9 height=11 xoffset=0 yoffset=4 xadvance=9 page=0 chnl=15
 char id=67 x=24 y=2 width=9 height=11 xoffset=0 yoffset=4 xadvance=9 page=0 chnl=15
@@ -67,4 +67,5 @@ char id=57 x=593 y=2 width=7 height=11 xoffset=0 yoffset=4 xadvance=7 page=0 chn
 char id=47 x=602 y=2 width=5 height=11 xoffset=-1 yoffset=4 xadvance=3 page=0 chnl=15
 char id=37 x=609 y=2 width=11 height=11 xoffset=0 yoffset=4 xadvance=11 page=0 chnl=15
 char id=176 x=622 y=2 width=6 height=11 xoffset=0 yoffset=4 xadvance=6 page=0 chnl=15
-char id=32 x=630 y=2 width=3 height=0 xoffset=0 yoffset=15 xadvance=3 page=0 chnl=15
+char id=45 x=630 y=2 width=4 height=5 xoffset=0 yoffset=10 xadvance=4 page=0 chnl=15
+char id=32 x=636 y=2 width=3 height=0 xoffset=0 yoffset=15 xadvance=3 page=0 chnl=15

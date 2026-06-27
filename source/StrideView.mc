@@ -16,7 +16,7 @@ using Toybox.Application as App;
 class StrideView extends Ui.WatchFace {
 
     hidden const TOP_Y    = 0.105;   // centre of the steps / distance row
-    hidden const WEEK_BASE_Y = 0.490;   // bar baseline (0%)
+    hidden const WEEK_BASE_Y = 0.450;   // bar baseline (0%)
     hidden const WEEK_MAX_H  = 0.250;   // plot height (120% of goal)
     hidden const TIME_CY  = 0.655;   // vertical centre of the time band
     hidden const DATE_DY  = 10;      // px each date line sits from the time centre
