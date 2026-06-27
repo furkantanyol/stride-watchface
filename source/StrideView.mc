@@ -102,16 +102,21 @@ class StrideView extends Ui.WatchFace {
         drawDistance(dc, (_width * 0.70).toNumber(), cy, distanceCm);
     }
 
-    // Footprint icon + step count, group-centered on cy.
+    // Steps: the bare number — it's the hero metric, no unit needed.
     hidden function drawSteps(dc, cx, cy, steps) {
-        var num = steps.toString();
-        var nw = dc.getTextWidthInPixels(num, _small);
-        var iconW = 8;
-        var gap = 4;
-        var sx = cx - ((iconW + gap + nw) / 2);
-        Icons.footprint(dc, sx, cy - 7, Theme.SEG_LIT);
         dc.setColor(Theme.SEG_LIT, Gfx.COLOR_TRANSPARENT);
-        dc.drawText(sx + iconW + gap, cy, _small, num, Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
+        dc.drawText(cx, cy, _small, steps.toString(), Gfx.TEXT_JUSTIFY_CENTER | Gfx.TEXT_JUSTIFY_VCENTER);
+    }
+
+    // A number (DSEG7) + its small unit, group-centered on cy.
+    hidden function drawNumUnit(dc, cx, cy, num, unit) {
+        var nw = dc.getTextWidthInPixels(num, _small);
+        var uw = dc.getTextWidthInPixels(unit, _word);
+        var sx = cx - ((nw + 1 + uw) / 2);
+        dc.setColor(Theme.SEG_LIT, Gfx.COLOR_TRANSPARENT);
+        dc.drawText(sx, cy, _small, num, Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
+        dc.setColor(Theme.MUTED, Gfx.COLOR_TRANSPARENT);
+        dc.drawText(sx + nw + 1, cy, _word, unit, Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
     }
 
     // Distance + "km" unit. The decimal point is hand-drawn (DSEG7's dot can't
@@ -179,35 +184,16 @@ class StrideView extends Ui.WatchFace {
         drawTemp(dc, (_width * 0.745).toNumber(), cy, Metrics.temperature());
     }
 
-    // "REC" keeps a label because bare hours would be ambiguous.
+    // Recovery: hours + "h", no label.
     hidden function drawRecovery(dc, cx, cy, hours) {
         if (hours == null) { drawDashes(dc, cx, cy); return; }
-        var num = hours.toString();
-        var pw = dc.getTextWidthInPixels("REC", _word);
-        var nw = dc.getTextWidthInPixels(num, _small);
-        var uw = dc.getTextWidthInPixels("H", _word);
-        var sx = cx - ((pw + 4 + nw + 1 + uw) / 2);
-        dc.setColor(Theme.MUTED, Gfx.COLOR_TRANSPARENT);
-        dc.drawText(sx, cy, _word, "REC", Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
-        dc.setColor(Theme.SEG_LIT, Gfx.COLOR_TRANSPARENT);
-        dc.drawText(sx + pw + 4, cy, _small, num, Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
-        dc.setColor(Theme.MUTED, Gfx.COLOR_TRANSPARENT);
-        dc.drawText(sx + pw + 4 + nw + 1, cy, _word, "H", Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
+        drawNumUnit(dc, cx, cy, hours.toString(), "h");
     }
 
-    // Battery glyph (filled to level) + percentage — the glyph is the label.
+    // Body Battery: percentage + "%", no label.
     hidden function drawBody(dc, cx, cy, pct) {
         if (pct == null) { drawDashes(dc, cx, cy); return; }
-        var num = pct.toString();
-        var iconW = 14;
-        var nw = dc.getTextWidthInPixels(num, _small);
-        var uw = dc.getTextWidthInPixels("%", _word);
-        var sx = cx - ((iconW + 4 + nw + 1 + uw) / 2);
-        Icons.battery(dc, sx, cy - 3, pct, Theme.MUTED, Theme.SEG_LIT);
-        dc.setColor(Theme.SEG_LIT, Gfx.COLOR_TRANSPARENT);
-        dc.drawText(sx + iconW + 4, cy, _small, num, Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
-        dc.setColor(Theme.MUTED, Gfx.COLOR_TRANSPARENT);
-        dc.drawText(sx + iconW + 4 + nw + 1, cy, _word, "%", Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
+        drawNumUnit(dc, cx, cy, pct.toString(), "%");
     }
 
     // Just the degrees — the ° is the label.
