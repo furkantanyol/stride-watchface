@@ -41,4 +41,19 @@
     <setting propertyKey="@Properties.ShowMetrics" title="@Strings.SettingShowMetrics">
         <settingConfig type="boolean"/>
     </setting>
+
+    <setting propertyKey="@Properties.FontStyle" title="@Strings.SettingFontStyle">
+        <settingConfig type="list">
+            <listEntry value="0">JetBrains Mono</listEntry>
+            <listEntry value="1">Inter</listEntry>
+            <listEntry value="2">Roboto Condensed</listEntry>
+        </settingConfig>
+    </setting>
+
+    <setting propertyKey="@Properties.TempUnit" title="@Strings.SettingTempUnit">
+        <settingConfig type="list">
+            <listEntry value="0">Celsius</listEntry>
+            <listEntry value="1">Fahrenheit</listEntry>
+        </settingConfig>
+    </setting>
 </settings>

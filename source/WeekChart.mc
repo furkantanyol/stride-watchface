@@ -1,5 +1,4 @@
 using Toybox.Graphics as Gfx;
-using Toybox.WatchUi as Ui;
 using Toybox.Lang as Lang;
 
 // The last-seven-days step chart — the hero. Each day is a stack of 10% blocks
@@ -14,14 +13,12 @@ module WeekChart {
     const BLOCK_GAP = 1;
     const BLOCKS = 10;       // the goal is the ceiling: 10 x 10% fills the plot
 
-    var dayFont = null;
+    var dayFont = null;   // the day-number font, set by the view (matches FontStyle)
 
     function draw(dc as Gfx.Dc, accent as Lang.Number, days as Lang.Array<Lang.Number>,
                   labels as Lang.Array<Lang.String>, goal as Lang.Number,
                   width as Lang.Number, baseY as Lang.Number, maxH as Lang.Number,
                   solid as Lang.Boolean) as Void {
-        if (dayFont == null) { dayFont = Ui.loadResource(Rez.Fonts.DayNum); }
-
         var n = days.size();
         var todayIndex = n - 1;
         var barW = (width * BAR_W_RATIO).toNumber();

@@ -8,4 +8,6 @@
     <string id="SettingLeadingZero">Leading zero on hour (12h)</string>
     <string id="SettingBarStyle">Bar style</string>
     <string id="SettingShowMetrics">Show bottom metrics</string>
+    <string id="SettingFontStyle">Font</string>
+    <string id="SettingTempUnit">Temperature unit</string>
 </strings>

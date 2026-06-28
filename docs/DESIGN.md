@@ -27,15 +27,9 @@ There is **no ghost skeleton behind the time**: at four grayscale levels the onl
 
 ## Typography
 
-**One typeface throughout — JetBrains Mono Bold** — a clean, highly legible monospace. Three bitmap sizes ship in `resources/fonts/`, generated from the TTF by `tools/genfont.py` (white-on-transparent so Garmin tints them with `setColor`).
+**One typeface throughout, user-selectable** — three minimal, highly readable options: **JetBrains Mono** (default), **Inter**, and **Roboto Condensed**. Each ships as three bitmap sizes (time ~30px · text ~13px · day ~10px) generated from its TTF by `tools/genfont.py` (white-on-transparent so Garmin tints them with `setColor`). Only the selected font's three sizes load at runtime (`loadFonts` in the view, reloaded when the setting changes); the chart's day font is the same family (`WeekChart.dayFont`, set by the view).
 
-| Font       | Size  | Used for                                                  |
-|------------|-------|-----------------------------------------------------------|
-| `LcdTime`  | ~30px | The time (`stride_time`, digits + colon)                  |
-| `LcdSmall` | ~13px | Every number, word, and unit (`stride_text`, full charset) — `_small` and `_word` both point here |
-| `DayNum`   | ~10px | Day numbers under the bars (`stride_day`, digits)         |
-
-Rendered with anti-aliasing **on** (a smooth font, unlike a pixel font). The font has real `.` and `:` glyphs, so the distance decimal and the time colon are native — nothing is hand-drawn. (An earlier DSEG7-segment / Silkscreen-pixel direction was tried and dropped in favor of this.)
+Rendered with anti-aliasing **on** (smooth fonts). The fonts have real `.` and `:` glyphs, so the distance decimal and the time colon are native — nothing is hand-drawn. (Earlier DSEG7-segment and Silkscreen-pixel directions were tried and dropped.)
 
 ## Layout proportions
 

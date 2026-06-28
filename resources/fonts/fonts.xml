@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <fonts>
-    <font id="LcdTime" filename="stride_time.fnt"/>
-    <font id="LcdSmall" filename="stride_text.fnt"/>
-    <font id="DayNum" filename="stride_day.fnt"/>
+    <!-- Font option 0: JetBrains Mono -->
+    <font id="F0Time" filename="stride_time.fnt"/>
+    <font id="F0Text" filename="stride_text.fnt"/>
+    <font id="F0Day"  filename="stride_day.fnt"/>
+    <!-- Font option 1: Inter -->
+    <font id="F1Time" filename="stride_in_time.fnt"/>
+    <font id="F1Text" filename="stride_in_text.fnt"/>
+    <font id="F1Day"  filename="stride_in_day.fnt"/>
+    <!-- Font option 2: Roboto Condensed -->
+    <font id="F2Time" filename="stride_rc_time.fnt"/>
+    <font id="F2Text" filename="stride_rc_text.fnt"/>
+    <font id="F2Day"  filename="stride_rc_day.fnt"/>
 </fonts>

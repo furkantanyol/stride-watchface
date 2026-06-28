@@ -35,6 +35,8 @@ Exposed in the Connect IQ phone app:
 - **Leading zero on hour.** 12h mode: `08:32` vs `8:32`.
 - **Bar style.** Segmented (10% blocks) or solid.
 - **Show bottom metrics.** Toggle the recovery / body battery / temp row for a cleaner face.
+- **Font.** JetBrains Mono · Inter · Roboto Condensed — all minimal and highly readable.
+- **Temperature unit.** Celsius or Fahrenheit.
 
 ## Explicitly out of scope (YAGNI)
 

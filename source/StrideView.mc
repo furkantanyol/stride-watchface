@@ -37,10 +37,11 @@ class StrideView extends Ui.WatchFace {
     hidden var _width;
     hidden var _height;
     hidden var _cx;
-    hidden var _cy;
-    hidden var _lcd;     // JetBrains Mono, large — the time
-    hidden var _small;   // JetBrains Mono, small — every number, word, and unit
+    hidden var _lcd;     // large — the time
+    hidden var _small;   // small — every number, word, and unit
     hidden var _word;    // alias of _small (one typeface throughout)
+    hidden var _day;     // tiny — the day numbers under the bars
+    hidden var _fontStyle = -1;   // which FontStyle the fonts are currently loaded for
 
     function initialize() {
         WatchFace.initialize();
@@ -50,12 +51,29 @@ class StrideView extends Ui.WatchFace {
         _width = dc.getWidth();
         _height = dc.getHeight();
         _cx = _width / 2;
-        _cy = _height / 2;
-        // One JetBrains Mono typeface throughout: big for the time, small for
-        // every number, word, and unit (the same font fills _small and _word).
-        _lcd = Ui.loadResource(Rez.Fonts.LcdTime);
-        _small = Ui.loadResource(Rez.Fonts.LcdSmall);
+        loadFonts(settingNumber("FontStyle", 0));
+    }
+
+    // Load the chosen font's three sizes, only when the FontStyle changes.
+    // The whole face uses one typeface, so _small and _word are the same font.
+    hidden function loadFonts(style) {
+        if (style == _fontStyle) { return; }
+        _fontStyle = style;
+        if (style == 1) {
+            _lcd = Ui.loadResource(Rez.Fonts.F1Time);
+            _small = Ui.loadResource(Rez.Fonts.F1Text);
+            _day = Ui.loadResource(Rez.Fonts.F1Day);
+        } else if (style == 2) {
+            _lcd = Ui.loadResource(Rez.Fonts.F2Time);
+            _small = Ui.loadResource(Rez.Fonts.F2Text);
+            _day = Ui.loadResource(Rez.Fonts.F2Day);
+        } else {
+            _lcd = Ui.loadResource(Rez.Fonts.F0Time);
+            _small = Ui.loadResource(Rez.Fonts.F0Text);
+            _day = Ui.loadResource(Rez.Fonts.F0Day);
+        }
         _word = _small;
+        WeekChart.dayFont = _day;
     }
 
     function onShow() {
@@ -76,6 +94,7 @@ class StrideView extends Ui.WatchFace {
     }
 
     function onUpdate(dc) {
+        loadFonts(settingNumber("FontStyle", 0));
         var goal = settingNumber("StepGoal", DEFAULT_GOAL);
         var accent = Theme.accent();
 
@@ -121,7 +140,7 @@ class StrideView extends Ui.WatchFace {
         dc.drawText(cx, cy, _small, steps.toString(), Gfx.TEXT_JUSTIFY_CENTER | Gfx.TEXT_JUSTIFY_VCENTER);
     }
 
-    // A number (DSEG7) + its small unit, group-centered on cy.
+    // A number + its small unit, group-centered on cy.
     hidden function drawNumUnit(dc, cx, cy, num, unit) {
         var nw = dc.getTextWidthInPixels(num, _small);
         var uw = dc.getTextWidthInPixels(unit, _word);
@@ -203,9 +222,11 @@ class StrideView extends Ui.WatchFace {
         drawNumUnit(dc, cx, cy, pct.toString(), "%");
     }
 
-    // Just the degrees — the ° is the label.
+    // Just the degrees — the ° is the label. Celsius from the API, converted
+    // to Fahrenheit when the TempUnit setting asks for it.
     hidden function drawTemp(dc, cx, cy, deg) {
         if (deg == null) { drawDashes(dc, cx, cy); return; }
+        if (settingNumber("TempUnit", 0) == 1) { deg = (deg * 9 / 5) + 32; }
         var num = deg.toString();
         var nw = dc.getTextWidthInPixels(num, _small);
         var uw = dc.getTextWidthInPixels("°", _word);

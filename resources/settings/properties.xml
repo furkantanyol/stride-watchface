@@ -7,4 +7,6 @@
     <property id="LeadingZero" type="boolean">false</property>
     <property id="BarStyle" type="number">0</property>
     <property id="ShowMetrics" type="boolean">true</property>
+    <property id="FontStyle" type="number">0</property>
+    <property id="TempUnit" type="number">0</property>
 </properties>
