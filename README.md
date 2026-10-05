@@ -3,7 +3,7 @@
 A minimalist watch face for the **Garmin Forerunner 245 / 245 Music**. One job: get you to **10,000 steps a day**, and make the time effortless to read.
 
 <p align="center">
-  <img src="docs/img/stride.png" alt="Stride watch face on a Forerunner 245 Music" width="360">
+  <img src="docs/img/stride-hero.webp" alt="Stride watch face on a Forerunner 245 Music, with its weekly step bars" width="640">
 </p>
 
 Inspired by the Casio G-Shock GBD-200, adapted to the round 240×240 display: a seven-day step chart is the hero, today's bar in amber against the goal line, with the time below and a few motivating readouts framing it. Pure monochrome on black with a single amber accent, all in one clean **JetBrains Mono** typeface.
